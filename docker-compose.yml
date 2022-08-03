@@ -1,8 +1,13 @@
 version: '3'
+networks:
+  larsid:
+    name: larsid
+    external: true
 services:
   compass:
     image: "iotacafe/compass:coordinator-8306ac7"
-    network_mode: host
+    networks:
+      - larsid
     depends_on: 
       - 'iri'
     volumes: 
@@ -18,10 +23,11 @@ services:
       -security ${SECURITY_LEVEL}
       -seed MYSEEDHEREPLEASEREPLACEMEIMMEDIATELYWITHSOMETHINGSECURE99999999999999999999999999
       -tick ${TICK_RATE}
-      -host http://localhost:${IRI_PORT}
+      -host http://iri:${IRI_PORT}
       -statePath /state/statefile
   iri:
-    network_mode: host
+    networks:
+      - larsid
     image: "iotaledger/iri:latest"
     ports:
       - "${IRI_PORT}:${IRI_PORT}"
